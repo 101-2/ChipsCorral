@@ -5,3 +5,5 @@ class Signup extends Component {
     return <div>Sign-Up</div>;
   }
 }
+
+export default Signup;
