@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Link } from "react-router-dom";
 
+// import Header style
 import "./Header.css";
-
-import Home from "../../views/Home/Home";
-import Login from "../../views/Login/Login";
 
 // bootstrap imports
 import "bootstrap/dist/css/bootstrap.min.css";
