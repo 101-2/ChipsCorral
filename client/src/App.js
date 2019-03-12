@@ -1,10 +1,13 @@
 import React, { Component } from "react";
-import { BrowserRouter, Route, Link } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 
 // imports for views
 import Home from "./views/Home/Home";
 import Login from "./views/Login/Login";
+import Welcome from "./views/Welcome/Welcome";
+import Signup from "./views/Signup/Signup";
 
+// imports for components
 import Header from "./Components/Header/Header";
 
 // bootstrap imports
@@ -22,8 +25,10 @@ class App extends Component {
       <BrowserRouter>
         <div>
           <Header />
-          <Route path="/" exact component={Login} />
+          <Route path="/" exact component={Welcome} />
           <Route path="/home" component={Home} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
         </div>
       </BrowserRouter>
     );
