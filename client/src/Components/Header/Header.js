@@ -15,7 +15,7 @@ class Header extends Component {
     return (
       <BrowserRouter>
         <header className="header-format">
-          <Link to="/home">
+          <Link to="/login">
             <button
               type="button"
               className="btn btn-warning"
