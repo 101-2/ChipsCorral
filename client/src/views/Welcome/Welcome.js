@@ -5,3 +5,5 @@ class Welcome extends Component {
     return <div>Welcome</div>;
   }
 }
+
+export default Welcome;
