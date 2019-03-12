@@ -2,8 +2,11 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
+
+// import models
 const User = require("./models/user");
 
+// initialize express
 const PORT = 3001;
 const app = express();
 const router = express.Router();
