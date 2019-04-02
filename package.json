@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"cd backend && node server.js\" \"cd client && npm start\""
+    "start": "concurrently –kill-others-on-fail \"cd backend && nodemon server.js\" \"cd client && npm start\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^4.1.0"
+    "concurrently": "^4.1.0",
+    "nodemon": "^1.18.10"
   }
 }
