@@ -15,15 +15,20 @@ class Header extends Component {
     return (
       <BrowserRouter>
         <header className="header-format">
-          <Link to="/login">
-            <button
-              type="button"
-              className="btn btn-warning"
-              onClick="location.href='/home'"
-            >
-              Login
-            </button>
-          </Link>
+          <a
+            className="btn btn-warning btn-format"
+            href="http://localhost:3000/login"
+            role="button"
+          >
+            Login
+          </a>
+          <a
+            className="btn btn-warning btn-format"
+            href="http://localhost:3000/signup"
+            role="button"
+          >
+            Sign-Up
+          </a>
         </header>
       </BrowserRouter>
     );

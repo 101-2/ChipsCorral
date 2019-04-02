@@ -1,9 +1,10 @@
 .header-format {
   background-color: rgb(48, 48, 48);
-  padding: 1%;
+  padding: 2%;
 }
 
 .btn-format {
+  vertical-align: middle;
   float: right;
-  margin: 1%;
+  margin-left: auto 0 auto 0;
 }
