@@ -1,0 +1,30 @@
+.centered{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    height: 10em;
+    width: 10em;
+    z-index: 2;
+  }
+
+
+
+  .bg{
+      width: 100%;
+      height: auto;
+      opacity: .6;
+      z-index: -1;
+      overflow: hidden;
+
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+        
+      /* Preserve aspet ratio */
+      min-width: 100%;
+      min-height: 100%;
+
+
+  }

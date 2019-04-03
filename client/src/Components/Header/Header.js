@@ -15,20 +15,23 @@ class Header extends Component {
     return (
       <BrowserRouter>
         <header className="header-format">
-          <a
-            className="btn btn-warning btn-format"
-            href="http://localhost:3000/login"
-            role="button"
-          >
-            Login
-          </a>
-          <a
-            className="btn btn-warning btn-format"
-            href="http://localhost:3000/signup"
-            role="button"
-          >
-            Sign-Up
-          </a>
+        <center>
+            <a
+              className="btnformat btn btn-warning"
+              href="http://localhost:3000/login"
+              role="button"
+            >
+              Login
+            </a>
+            <text className="or">or</text>
+            <a
+              className="btnformat btn btn-warning"
+              href="http://localhost:3000/signup"
+              role="button"
+            >
+              Sign-Up
+            </a>
+          </center>
         </header>
       </BrowserRouter>
     );
