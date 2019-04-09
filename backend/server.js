@@ -1,6 +1,6 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const pino = require("express-pino-logger")();
+const cors = require("cors");
 var colors = require("colors");
 
 require("dotenv").config();
@@ -13,16 +13,24 @@ const db = pgp(process.env.DATABASE_URL);
 // initialize express
 const PORT = process.env.PORT || 5000;
 const app = express();
-const router = express.Router();
 
 // initialize express body-parsing for error logging
-app.use(bodyParser.urlencoded({ extended: false }));
+app.options("*", cors());
 app.use(pino);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 app.get("/test", (req, res) => {
   db.any("SELECT * FROM USERS;")
     .then(data => {
-      console.log(data);
       res.status(200);
       res.send("Test passed");
     })
@@ -33,9 +41,17 @@ app.get("/test", (req, res) => {
     });
 });
 
-app.put("/user/:user_info", (req, res) => {
-  const user_info = JSON.parse(req.params.user_info);
+app.post("/user", (req, res) => {
+  console.log(req.body.email);
+  const user_info = req.body;
   console.log(`Attempting to create user ${user_info.username}`);
+
+  if (user_info.password === undefined) {
+    console.log("PASSWORD UNDEFINED");
+    res.status(400);
+    res.send("PASSWORD UNDEFINED");
+    return;
+  }
 
   bcrypt.hash(user_info.password, salt).then(hash => {
     var query =
@@ -61,6 +77,22 @@ app.put("/user/:user_info", (req, res) => {
         res.send("Error creating user.");
       });
   });
+});
+
+app.delete("/user", (req, res) => {
+  console.log(req.query.id);
+  var query = `DELETE FROM users WHERE user_id=${req.query.id}`;
+  db.any(query)
+    .then(data => {
+      console.log(data);
+      res.status(200);
+      res.send("User deleted");
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.send("User could not be deleted");
+    });
 });
 
 // start server
