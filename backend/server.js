@@ -28,11 +28,15 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/", (req, res) => {
+  res.send("Hello from CUB-FORUM-API");
+});
+
 app.get("/test", (req, res) => {
   db.any("SELECT * FROM USERS;")
     .then(data => {
       res.status(200);
-      res.send("Test passed");
+      res.send("Test passed: " + JSON.stringify(data));
     })
     .catch(err => {
       console.log(err);
