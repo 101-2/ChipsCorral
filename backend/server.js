@@ -28,10 +28,12 @@ app.use((req, res, next) => {
   next();
 });
 
+// get request for /
 app.get("/", (req, res) => {
   res.send("Hello from CUB-FORUM-API");
 });
 
+// test get functions for database
 app.get("/test", (req, res) => {
   db.any("SELECT * FROM USERS;")
     .then(data => {
@@ -45,6 +47,7 @@ app.get("/test", (req, res) => {
     });
 });
 
+// creating user
 app.post("/user", (req, res) => {
   console.log(req.body.email);
   const user_info = req.body;
@@ -83,6 +86,7 @@ app.post("/user", (req, res) => {
   });
 });
 
+// delete user
 app.delete("/user", (req, res) => {
   console.log(req.query.id);
   var query = `DELETE FROM users WHERE user_id=${req.query.id}`;
@@ -96,6 +100,27 @@ app.delete("/user", (req, res) => {
       console.log(err);
       res.status(400);
       res.send("User could not be deleted");
+    });
+});
+
+// get user info
+app.get("/user", (req, res) => {
+  console.log(req.query.id);
+  var query = `SELECT * FROM users WHERE user_id=${req.query.id} LIMIT 1`;
+  db.any(query)
+    .then(data => {
+      console.log(data);
+      res.status(200);
+      if (typeof data[0] === undefined || data.length == 0) {
+        throw `data undefined for user_id: ${req.query.id}`;
+      } else {
+        res.send(`User ${data[0].username} data retrieved`);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.send(`User ${req.query.id} could not be retrieved`);
     });
 });
 
