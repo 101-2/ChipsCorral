@@ -24,21 +24,24 @@ class Signup extends Component {
   }
 
   createUser(event) {
-    var email = document.getElementById("inputEmail").value;
-    var password = document.getElementById("inputPassword").value;
-    var username = document.getElementById("inputUsername").value;
+    var new_email = document.getElementById("inputEmail").value;
+    var new_password = document.getElementById("inputPassword").value;
+    var new_username = document.getElementById("inputUsername").value;
 
-    console.log(email + " " + password + " " + username);
+    console.log(new_email + " " + new_password + " " + new_username);
 
-    var request = `/user/{"email":"${email}","password":"${password}","username":"${username}"}`;
+    if (checkEmail(new_email)) {
+      var params = {
+        email: new_email,
+        password: new_password,
+        username: new_username
+      };
 
-    console.log(request);
-
-    if (checkEmail(email)) {
       axios
-        .put(request)
-        .then(data => console.log(data))
-        .catch(err => console.log(err));
+        .post(`http://localhost:3001/user`, params)
+        .then(data => console.log("DATA: " + data))
+        .catch(err => console.log("ERR: " + err))
+        .then((window.location = "http://localhost:3000/home"));
     } else {
       window.alert("Must enter a @colorado.edu email");
     }
