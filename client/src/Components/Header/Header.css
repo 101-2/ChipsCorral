@@ -1,28 +1,27 @@
 .header-format {
-  background-color: rgb(48, 48, 48, .8);
+  background-color: rgb(48, 48, 48, 0.8);
   padding: 2%;
 }
 
 .btnformat {
-  margin-right: .5%;
-  margin-left: .5%;
+  margin-right: 0.5%;
+  margin-left: 0.5%;
   width: 20%;
   opacity: 1;
 }
 
-
-.or{
+.or {
   color: white;
 }
 
-  a{
-    position:relative;
-    font-weight:900 !important;
-    text-transform:uppercase;
-    border-radius:5px;
-    font:10px lato;
-  }
-  
-  a:hover{
-    opacitY:.7;
-  }
+a {
+  position: relative;
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  border-radius: 5px;
+  font: 10px lato;
+}
+
+a:hover {
+  opacity: 0.7;
+}
