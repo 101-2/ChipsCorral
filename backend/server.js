@@ -61,46 +61,48 @@ app.post("/user", (req, res) => {
   }
 
   bcrypt.hash(user_info.password, salt).then(hash => {
-    var query =
-      "INSERT INTO users(email, password, username) VALUES ('" +
-      user_info.email +
-      "', '" +
-      hash +
-      "', '" +
-      user_info.username +
-      "');";
-
-    console.log(query.yellow);
-
-    db.any(query)
+    db.one("SELECT * FROM users WHERE email = $1 OR username = $2;", [
+      user_info.email,
+      user_info.username
+    ])
       .then(data => {
         console.log(data);
-        res.status(201);
-        res.send(`User ${user_info.username} created.`);
+        res.status(400);
+        if (
+          data.email == user_info.email &&
+          data.username == user_info.username
+        ) {
+          res.send(
+            `User with email: "${user_info.email}" and with username: "${
+              user_info.username
+            }" already exists`
+          );
+        } else if (data.username == user_info.username) {
+          res.send(`User with username "${user_info.username}" already exists`);
+        } else {
+          res.send(`User with email: "${user_info.email}" already exists`);
+        }
       })
       .catch(err => {
-        console.log(err);
-        res.status(400);
-        res.send("Error creating user.");
+        console.error(err.received);
+        if (err.received == 0) {
+          db.any(
+            "INSERT INTO users(email, password, username) VALUES ($1, $2, $3);",
+            [user_info.email, hash, user_info.username]
+          )
+            .then(data => {
+              console.log("SERVER: " + data);
+              res.status(201);
+              res.send(data);
+            })
+            .catch(err => {
+              console.log("SERVER: " + err);
+              res.status(400);
+              res.send({ err });
+            });
+        }
       });
   });
-});
-
-// delete user
-app.delete("/user", (req, res) => {
-  console.log(req.query.id);
-  var query = `DELETE FROM users WHERE user_id=${req.query.id}`;
-  db.any(query)
-    .then(data => {
-      console.log(data);
-      res.status(200);
-      res.send("User deleted");
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(400);
-      res.send("User could not be deleted");
-    });
 });
 
 // get user info
@@ -114,13 +116,42 @@ app.get("/user", (req, res) => {
       if (typeof data[0] === undefined || data.length == 0) {
         throw `data undefined for user_id: ${req.query.id}`;
       } else {
-        res.send(`User ${data[0].username} data retrieved`);
+        res.send(data[0]);
       }
     })
     .catch(err => {
       console.log(err);
       res.status(400);
-      res.send(`User ${req.query.id} could not be retrieved`);
+      res.send({ err });
+    });
+});
+
+// delete user
+app.delete("/user", (req, res) => {
+  console.log(req.query.id);
+  db.any("SELECT * FROM users WHERE user_id=$1", [req.query.id])
+    .then(data => {
+      console.log(data);
+      if (data !== undefined) {
+        db.any("DELETE FROM users WHERE user_id=$1", [req.query.id])
+          .then(data => {
+            console.log(data);
+            res.status(200);
+            res.send(`User with id ${req.query.id} deleted`);
+          })
+          .catch(err => {
+            console.log(err);
+            res.status(400);
+            res.send("User could not be deleted");
+          });
+      } else {
+        throw `User with id ${req.query.id} does not exist`;
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.send({ err });
     });
 });
 
