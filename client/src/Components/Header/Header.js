@@ -15,7 +15,7 @@ class Header extends Component {
     return (
       <BrowserRouter>
         <header className="header-format">
-        <center>
+          <center>
             <a
               className="btnformat btn btn-warning"
               href="http://localhost:3000/login"
@@ -23,7 +23,7 @@ class Header extends Component {
             >
               Login
             </a>
-            <text className="or">or</text>
+            <span className="or">or</span>
             <a
               className="btnformat btn btn-warning"
               href="http://localhost:3000/signup"
