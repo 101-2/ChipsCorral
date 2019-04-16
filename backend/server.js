@@ -72,15 +72,29 @@ app.post("/user", (req, res) => {
           data.email == user_info.email &&
           data.username == user_info.username
         ) {
-          res.send(
-            `User with email: "${user_info.email}" and with username: "${
+          res.json({
+            dev: `User with email: ${user_info.email} and with username: ${
               user_info.username
-            }" already exists`
-          );
+            } already exists`,
+            message: "Username and email taken"
+          });
+          // res.send(
+          //   `User with email: "${user_info.email}" and with username: "${
+          //     user_info.username
+          //   }" already exists`
+          // );
         } else if (data.username == user_info.username) {
-          res.send(`User with username "${user_info.username}" already exists`);
+          res.json({
+            dev: `User with username: ${user_info.username} already exists`,
+            message: "Username taken"
+          });
+          // res.send(`User with username "${user_info.username}" already exists`);
         } else {
-          res.send(`User with email: "${user_info.email}" already exists`);
+          res.json({
+            dev: `User with email: ${user_info.email} already exists`,
+            message: "Email taken"
+          });
+          // res.send(`User with email: "${user_info.email}" already exists`);
         }
       })
       .catch(err => {
@@ -152,6 +166,29 @@ app.delete("/user", (req, res) => {
       console.log(err);
       res.status(400);
       res.send({ err });
+    });
+});
+
+app.post("/post", (req, res) => {
+  const post_info = req.body;
+  db.none(
+    "INSERT INTO posts(title, content, user_id, thread_id) VALUES($1, $2, $3, $4);",
+    [post_info.title, post_info.content, post_info.user_id, post_info.thread_id]
+  )
+    .then(data => {
+      // console.log(data);
+      res.status(200);
+      res.json({
+        status: "Post successful"
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json({
+        status: "Post could not be created",
+        error: err
+      });
     });
 });
 
