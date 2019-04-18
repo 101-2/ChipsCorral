@@ -1,0 +1,28 @@
+.header-format {
+  background-color: black;
+  padding: 2%;
+}
+
+.btn-format {
+  margin-right: 0.5%;
+  margin-left: 0.5%;
+  width: 20%;
+  opacity: 1;
+}
+
+.or {
+  color: white;
+}
+
+a {
+  position: relative;
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  border-radius: 5px;
+  font: 10px;
+}
+
+.header {
+  background-color: black;
+  padding: 1%;
+}
