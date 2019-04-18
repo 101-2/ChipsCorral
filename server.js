@@ -34,15 +34,19 @@ nunjucks.configure("views", {
 
 // get request for /
 app.get("/", (req, res) => {
-  res.render("welcome.html");
+  res.render("pages/welcome.html");
 });
 
 app.get("/signup", (req, res) => {
-  res.render("signup.html");
+  res.render("pages/signup.html");
 });
 
 app.get("/login", (req, res) => {
-  res.render("login.html");
+  res.render("pages/login.html");
+});
+
+app.get("/home", (req, res) => {
+  res.render("pages/home.html");
 });
 
 // test get functions for database
