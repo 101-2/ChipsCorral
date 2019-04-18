@@ -169,6 +169,7 @@ app.delete("/user", (req, res) => {
     });
 });
 
+// create post
 app.post("/post", (req, res) => {
   const post_info = req.body;
   db.none(
@@ -191,6 +192,51 @@ app.post("/post", (req, res) => {
       });
     });
 });
+
+// get post
+app.get("/post", (req, res) => {
+  db.one("SELECT * FROM posts WHERE post_id=$1;", [req.query.id])
+    .then(data => {
+      console.log(data);
+      res.status(200);
+      res.send(data);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json({
+        message: `Post with id: ${req.query.id} does not exist`
+      });
+    });
+});
+
+// delete post
+app.delete("/post", (req, res) => {
+  db.one("SELECT * FROM posts WHERE post_id=$1;", [req.query.id])
+    .then(data => {
+      db.none("DELETE FROM posts WHERE post_id=$1;", [req.query.id])
+        .then(() => {
+          res.status(200);
+          res.json({
+            dev: `Post with id: ${req.query.id} deleted`,
+            message: "Post deleted",
+            status: "Success"
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(400);
+          res.send({ err });
+        });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.send({ err });
+    });
+});
+
+
 
 // start server
 app.listen(PORT, () => console.log(`listening on port ${PORT}`.magenta));
