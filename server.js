@@ -90,23 +90,16 @@ app.post("/user", (req, res) => {
             } already exists`,
             message: "Username and email taken"
           });
-          // res.send(
-          //   `User with email: "${user_info.email}" and with username: "${
-          //     user_info.username
-          //   }" already exists`
-          // );
         } else if (data.username == user_info.username) {
           res.json({
             dev: `User with username: ${user_info.username} already exists`,
             message: "Username taken"
           });
-          // res.send(`User with username "${user_info.username}" already exists`);
         } else {
           res.json({
             dev: `User with email: ${user_info.email} already exists`,
             message: "Email taken"
           });
-          // res.send(`User with email: "${user_info.email}" already exists`);
         }
       })
       .catch(err => {
@@ -189,7 +182,6 @@ app.post("/post", (req, res) => {
     [post_info.title, post_info.content, post_info.user_id, post_info.thread_id]
   )
     .then(data => {
-      // console.log(data);
       res.status(200);
       res.json({
         status: "Post successful"
@@ -249,4 +241,4 @@ app.delete("/post", (req, res) => {
 });
 
 // start server
-app.listen(PORT, () => console.log(`listening on port ${PORT}`.magenta));
+app.listen(PORT, () => console.log(`listening on port ${PORT}`));
