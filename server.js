@@ -1,7 +1,6 @@
 const express = require("express");
-const pino = require("express-pino-logger")();
+const nunjucks = require("nunjucks");
 const cors = require("cors");
-var colors = require("colors");
 
 require("dotenv").config();
 const pgp = require("pg-promise")();
@@ -17,7 +16,6 @@ const PORT = process.env.PORT || 5000;
 // initialize express body-parsing for error logging
 app.options("*", cors());
 app.use(express.static(__dirname + "/"));
-app.use(pino);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
@@ -29,9 +27,22 @@ app.use((req, res, next) => {
   next();
 });
 
+nunjucks.configure("views", {
+  autoescape: true,
+  express: app
+});
+
 // get request for /
 app.get("/", (req, res) => {
-  res.render("views/welcome.html");
+  res.render("welcome.html");
+});
+
+app.get("/signup", (req, res) => {
+  res.render("signup.html");
+});
+
+app.get("/login", (req, res) => {
+  res.render("login.html");
 });
 
 // test get functions for database
