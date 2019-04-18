@@ -11,11 +11,12 @@ const salt = 10;
 const db = pgp(process.env.DATABASE_URL);
 
 // initialize express
-const PORT = process.env.PORT || 5000;
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 // initialize express body-parsing for error logging
 app.options("*", cors());
+app.use(express.static(__dirname + "/"));
 app.use(pino);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -30,7 +31,7 @@ app.use((req, res, next) => {
 
 // get request for /
 app.get("/", (req, res) => {
-  res.send("Hello from CUB-FORUM-API");
+  res.render("views/welcome.html");
 });
 
 // test get functions for database
