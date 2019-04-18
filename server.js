@@ -245,5 +245,5 @@ app.delete("/post", (req, res) => {
 
 // start server
 app.listen(process.env.PORT || 5000, () =>
-  console.log(`listening on port ${PORT}`)
+  console.log(`listening on port ${process.env.PORT || 5000}`)
 );
