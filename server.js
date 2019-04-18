@@ -11,7 +11,6 @@ const db = pgp(process.env.DATABASE_URL);
 
 // initialize express
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // initialize express body-parsing for error logging
 app.options("*", cors());
@@ -245,4 +244,6 @@ app.delete("/post", (req, res) => {
 });
 
 // start server
-app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+app.listen(process.env.PORT || 5000, () =>
+  console.log(`listening on port ${PORT}`)
+);
