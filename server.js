@@ -48,20 +48,6 @@ app.get("/home", (req, res) => {
   res.render("pages/home.html");
 });
 
-// test get functions for database
-app.get("/test", (req, res) => {
-  db.any("SELECT * FROM USERS;")
-    .then(data => {
-      res.status(200);
-      res.send("Test passed: " + JSON.stringify(data));
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(400);
-      res.send("Test failed");
-    });
-});
-
 // creating user
 app.post("/user", (req, res) => {
   console.log(req.body.email);
