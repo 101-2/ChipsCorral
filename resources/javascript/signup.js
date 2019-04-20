@@ -1,5 +1,3 @@
-import axios from "axios";
-
 const baseUrl = "https://cub-forum.herokuapp.com";
 
 function checkEmail(email) {
@@ -27,11 +25,14 @@ function createUser() {
       username: new_username
     };
 
-    axios
-      .post(`${baseUrl}/user`, params)
-      .then(data => console.log("DATA: " + data))
-      .then((window.location = `${baseUrl}/home`))
-      .catch(err => console.log("ERR: " + err));
+    fetch(baseUrl + "/user", {
+      method: "POST",
+      body: JSON.stringify(params)
+    })
+      .then(res => res.json())
+      .then(response => console.log("Success: ", JSON.stringify(response)))
+      .then(() => (window.location = baseUrl + "/home"))
+      .catch(err => console.error("Error: ", err));
   } else {
     window.alert("Must enter a @colorado.edu email");
   }
