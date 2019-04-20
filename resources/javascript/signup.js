@@ -25,11 +25,11 @@ function createUser() {
       username: new_username
     };
 
-    console.log(`Email: ${params.email}`);
+    console.log(params);
 
     fetch(baseUrl + "/user", {
       method: "POST",
-      body: params,
+      body: JSON.stringify(params),
       headers: {
         "Content-Type": "application/json"
       }
