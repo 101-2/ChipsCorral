@@ -110,7 +110,8 @@ app.post("/user", (req, res) => {
             .then(data => {
               console.log("SERVER SUCCESS");
               res.status(201);
-              res.send(data);
+              res.send("Success: ", user_info);
+              res.redirect("https://cub-forum.herokuapp.com/home");
             })
             .catch(err => {
               console.error("SERVER ERROR: ", err);
