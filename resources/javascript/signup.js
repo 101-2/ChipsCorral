@@ -31,7 +31,18 @@ function createUser() {
         console.log("Response: ", res);
         window.location.replace(baseUrl + "/home");
       })
-      .catch(err => console.error("Error: ", err));
+      .catch(error => {
+        if (error.response) {
+          console.log("Error data : ", error.response.data);
+          console.log("Error status : ", error.response.status);
+          console.log("Error headers : ", error.response.headers);
+        } else if (error.request) {
+          console.log("Error request : ", error.request);
+        } else {
+          console.log("Error message : ", error.message);
+        }
+        console.log(error.config);
+      });
   } else {
     window.alert("Must enter a @colorado.edu email");
   }
