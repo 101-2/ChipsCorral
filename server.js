@@ -92,19 +92,19 @@ app.post("/user", (req, res) => {
         }
       })
       .catch(err => {
-        console.error(err.received);
+        console.log("Matching Users: " + err.received);
         if (err.received == 0) {
           db.any(
             "INSERT INTO users(email, password, username) VALUES ($1, $2, $3);",
             [user_info.email, hash, user_info.username]
           )
             .then(data => {
-              console.log("SERVER: " + data);
+              console.log("SERVER SUCCESS");
               res.status(201);
               res.send(data);
             })
             .catch(err => {
-              console.log("SERVER: " + err);
+              console.error("SERVER ERROR: ", err);
               res.status(400);
               res.send({ err });
             });
