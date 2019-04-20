@@ -44,7 +44,7 @@ function createUser() {
         console.log("Success: " + response);
         window.location.replace(baseUrl + "/home");
       })
-      .catch(err => console.error("Error: ", err));
+      .catch(err => console.error("Error: ", err.message));
   } else {
     window.alert("Must enter a @colorado.edu email");
   }
