@@ -73,6 +73,11 @@ app.post("/user", (req, res) => {
           data.email == user_info.email &&
           data.username == user_info.username
         ) {
+          console.log(
+            `User with email: ${user_info.email} and with username: ${
+              user_info.username
+            } already exists`
+          );
           res.json({
             dev: `User with email: ${user_info.email} and with username: ${
               user_info.username
@@ -80,11 +85,15 @@ app.post("/user", (req, res) => {
             message: "Username and email taken"
           });
         } else if (data.username == user_info.username) {
+          console.log(
+            `User with username: ${user_info.username} already exists`
+          );
           res.json({
             dev: `User with username: ${user_info.username} already exists`,
             message: "Username taken"
           });
         } else {
+          console.log(`User with email: ${user_info.email} already exists`);
           res.json({
             dev: `User with email: ${user_info.email} already exists`,
             message: "Email taken"
