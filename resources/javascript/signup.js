@@ -25,13 +25,18 @@ function createUser() {
       username: new_username
     };
 
+    console.log(`Email: ${params.email}`);
+
     fetch(baseUrl + "/user", {
       method: "POST",
-      body: JSON.stringify(params)
+      body: JSON.stringify(params),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
     })
       .then(res => res.json())
       .then(response => console.log("Success: ", JSON.stringify(response)))
-      .then(() => (window.location = baseUrl + "/home"))
+      .then(() => (window.location.href = baseUrl + "/home"))
       .catch(err => console.error("Error: ", err));
   } else {
     window.alert("Must enter a @colorado.edu email");
