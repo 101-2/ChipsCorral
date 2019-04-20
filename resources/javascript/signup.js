@@ -36,15 +36,14 @@ function createUser() {
     })
       .then(res => {
         if (!res.ok) {
-          throw Error(res.statusText);
+          throw Error(res);
         }
         return response;
       })
       .then(response => {
         console.log("Success: " + response);
-        window.location.replace(baseUrl + "/home");
       })
-      .catch(err => console.error("Error: ", err.message));
+      .catch(err => console.error("Error: ", err));
   } else {
     window.alert("Must enter a @colorado.edu email");
   }
