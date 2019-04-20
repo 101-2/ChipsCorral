@@ -25,23 +25,11 @@ function createUser() {
       username: new_username
     };
 
-    console.log(params);
-
-    fetch(baseUrl + "/user", {
-      method: "POST",
-      body: JSON.stringify(params),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
+    axios
+      .post(`${baseUrl}/user`, params)
       .then(res => {
-        if (!res.ok) {
-          throw Error(res);
-        }
-        return response;
-      })
-      .then(response => {
-        console.log("Success: " + response);
+        console.log("Response: ", res);
+        window.location.replace(baseUrl + "/home");
       })
       .catch(err => console.error("Error: ", err));
   } else {
