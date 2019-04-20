@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 const baseUrl = "https://cub-forum.herokuapp.com";
 
