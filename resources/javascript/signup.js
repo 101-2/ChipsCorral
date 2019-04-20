@@ -29,7 +29,7 @@ function createUser() {
 
     fetch(baseUrl + "/user", {
       method: "POST",
-      body: JSON.stringify(params),
+      body: params,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }
