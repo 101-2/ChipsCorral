@@ -143,9 +143,9 @@ app.use("/users", usersRouter);
 app.use("/users/login", passport.authenticate("oidc"));
 app.use(
   "/authorization-code/callback",
-  passport.authenticate("oidc", { failureRedirect: "/" }),
+  passport.authenticate("oidc", { failureRedirect: "/error" }),
   (req, res) => {
-    res.redirect("/");
+    res.redirect("/home");
   }
 );
 
