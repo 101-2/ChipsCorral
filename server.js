@@ -89,6 +89,8 @@ nunjucks.configure("views", {
   express: app
 });
 
+app.set("view engine", "html");
+
 app.use("/", welcomeRouter);
 app.use("/home", oidc.ensureAuthenticated(), usersRouter);
 app.use("/users", usersRouter);
