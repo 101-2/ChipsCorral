@@ -19,19 +19,6 @@ const db = pgp(process.env.DATABASE_URL);
 // initialize express
 const app = express();
 
-var oktaClient = new okta.Client({
-  orgUrl: "https://dev-882471.okta.com",
-  token: "00f4VNjzeOiLW7z45xOZUW2CkUwcsp0kQ_ztnF7tvq"
-});
-
-const oidc = new ExpressOIDC({
-  issuer: "https://dev-882471.okta.com/oauth2/default",
-  client_id: "0oahqt0dfGtGYhUf7356",
-  client_secret: "jPYoPT2eDW3hOp9vILPa9BcHU725_sEaAGZY1z1w",
-  redirect_uri: "https://cub-forum.herokuapp.com/authorization-code/callback",
-  scope: "openid profile"
-});
-
 // initialize express body-parsing for error logging
 app.options("*", cors());
 app.use(express.static(__dirname + "/"));
@@ -44,7 +31,31 @@ app.use(
     saveUninitialized: false
   })
 );
+
+var oktaClient = new okta.Client({
+  orgUrl: "https://dev-882471.okta.com",
+  token: "00hK2PSWor0vUzqaLcqRYwhIy6EQ-KWH7Q5kZSID9c"
+});
+
+const oidc = new ExpressOIDC({
+  issuer: "https://dev-882471.okta.com/oauth2/default",
+  client_id: "0oahqwjwkAqyibi8V356",
+  client_secret: "BNH9ynOKGO5A7uya90-8K4vuToTYNiXUpPihSxkw",
+  redirect_uri: "https://cub-forum.herokuapp.com/authorization-code/callback",
+  scope: "openid profile",
+  routes: {
+    login: {
+      path: "/users/login"
+    },
+    callback: {
+      path: "/authorization-code/callback",
+      defaultRedirect: "/home"
+    }
+  }
+});
+
 app.use(oidc.router);
+
 app.use((req, res, next) => {
   if (!req.userinfo) {
     return next();
