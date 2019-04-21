@@ -344,12 +344,7 @@ app.delete("/post", (req, res) => {
 });
 
 // start server
-oidc.on("ready", () => {
-  app.listen(process.env.PORT || 5000, () => {
-    console.log(`listening on port ${process.env.PORT || 5000}`);
-  });
-});
 
-oidc.on("error", err => {
-  console.log("Unable to configure ExpressOIDC", err);
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`listening on port ${process.env.PORT || 5000}`);
 });
