@@ -28,17 +28,8 @@ const oidc = new ExpressOIDC({
   issuer: "https://dev-882471.okta.com/oauth2/default",
   client_id: "0oahqt0dfGtGYhUf7356",
   client_secret: "jPYoPT2eDW3hOp9vILPa9BcHU725_sEaAGZY1z1w",
-  redirect_uri: "https://cub-forum.herokuapp.com/users/callback",
-  scope: "openid profile",
-  routes: {
-    login: {
-      path: "/users/login"
-    },
-    callback: {
-      path: "/users/callback",
-      defaultRedirect: "/home"
-    }
-  }
+  redirect_uri: "https://cub-forum.herokuapp.com/authorization-code/callback",
+  scope: "openid profile"
 });
 
 // initialize express body-parsing for error logging
