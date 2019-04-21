@@ -1,6 +1,13 @@
 const express = require("express");
+const session = require("express-session");
 const nunjucks = require("nunjucks");
 const cors = require("cors");
+const okta = require("@okta/okta-sdk-nodejs");
+const ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
+
+const welcomeRouter = require("./routes/welcome");
+const homeRouter = require("./routes/home");
+const usersRouter = require("./routes/users");
 
 require("dotenv").config();
 const pgp = require("pg-promise")();
@@ -12,11 +19,57 @@ const db = pgp(process.env.DATABASE_URL);
 // initialize express
 const app = express();
 
+var oktaClient = new okta.Client({
+  orgUrl: "https://dev-882471.okta.com",
+  token: "00f4VNjzeOiLW7z45xOZUW2CkUwcsp0kQ_ztnF7tvq"
+});
+
+const oidc = new ExpressOIDC({
+  issuer: "https://dev-882471.okta.com/oauth2/default",
+  client_id: "0oahqt0dfGtGYhUf7356",
+  client_secret: "jPYoPT2eDW3hOp9vILPa9BcHU725_sEaAGZY1z1w",
+  redirect_uri: "https://cub-forum.herokuapp.com/users/callback",
+  scope: "openid profile",
+  routes: {
+    login: {
+      path: "/users/login"
+    },
+    callback: {
+      path: "/users/callback",
+      defaultRedirect: "/home"
+    }
+  }
+});
+
 // initialize express body-parsing for error logging
 app.options("*", cors());
 app.use(express.static(__dirname + "/"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: "alskd;oinowioiaon'iasdij14098pugno;isdfhasdjkhlas",
+    resave: true,
+    saveUninitialized: false
+  })
+);
+app.use(oidc.router);
+app.use((req, res, next) => {
+  if (!req.userinfo) {
+    return next();
+  }
+
+  oktaClient
+    .getUser(req.userinfo.sub)
+    .then(user => {
+      res.user = user;
+      res.locals.user = user;
+      next();
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 // app.use((req, res, next) => {
 //   res.header("Access-Control-Allow-Origin", "*");
 //   res.setHeader(
@@ -36,22 +89,36 @@ nunjucks.configure("views", {
   express: app
 });
 
+function loginRequired(req, res, next) {
+  if (!req.user) {
+    return res.status(401).render("pages/welcome");
+  }
+}
+
+app.use("/", welcomeRouter);
+app.use("/home", loginRequired, usersRouter);
+app.use("/users", usersRouter);
+
+app.get("/test", (req, res) => {
+  res.json({ profile: req.user ? req.user.profile : null });
+});
+
 // get request for /
-app.get("/", (req, res) => {
-  res.render("pages/welcome.html");
-});
+// app.get("/", (req, res) => {
+//   res.render("pages/welcome.html");
+// });
 
-app.get("/signup", (req, res) => {
-  res.render("pages/signup.html");
-});
+// app.get("/signup", (req, res) => {
+//   res.render("pages/signup.html");
+// });
 
-app.get("/login", (req, res) => {
-  res.render("pages/login.html");
-});
+// app.get("/login", (req, res) => {
+//   res.render("pages/login.html");
+// });
 
-app.get("/home", (req, res) => {
-  res.render("pages/home.html");
-});
+// app.get("/home", (req, res) => {
+//   res.render("pages/home.html");
+// });
 
 // creating user
 app.post("/user", (req, res) => {
