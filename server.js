@@ -56,21 +56,16 @@ const oidc = new ExpressOIDC({
 
 app.use(oidc.router);
 
-app.use((req, res, next) => {
-  if (!req.userinfo) {
-    return next();
+app.use(async (req, res, next) => {
+  if (req.userinfo) {
+    try {
+      req.user = await oktaClient.getUser(req.userinfo.sub);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  oktaClient
-    .getUser(req.userinfo.sub)
-    .then(user => {
-      res.user = user;
-      res.locals.user = user;
-      next();
-    })
-    .catch(err => {
-      next(err);
-    });
+  next();
 });
 // app.use((req, res, next) => {
 //   res.header("Access-Control-Allow-Origin", "*");
@@ -100,23 +95,6 @@ app.use("/users", usersRouter);
 app.get("/test", (req, res) => {
   res.json({ profile: req.user ? req.user.profile : null });
 });
-
-// get request for /
-// app.get("/", (req, res) => {
-//   res.render("pages/welcome.html");
-// });
-
-// app.get("/signup", (req, res) => {
-//   res.render("pages/signup.html");
-// });
-
-// app.get("/login", (req, res) => {
-//   res.render("pages/login.html");
-// });
-
-// app.get("/home", (req, res) => {
-//   res.render("pages/home.html");
-// });
 
 // creating user
 app.post("/user", (req, res) => {
