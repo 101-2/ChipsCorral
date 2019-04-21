@@ -89,14 +89,8 @@ nunjucks.configure("views", {
   express: app
 });
 
-function loginRequired(req, res, next) {
-  if (!req.user) {
-    return res.status(401).render("pages/welcome");
-  }
-}
-
 app.use("/", welcomeRouter);
-app.use("/home", loginRequired, usersRouter);
+app.use("/home", oidc.ensureAuthenticated(), usersRouter);
 app.use("/users", usersRouter);
 
 app.get("/test", (req, res) => {
@@ -311,6 +305,12 @@ app.delete("/post", (req, res) => {
 });
 
 // start server
-app.listen(process.env.PORT || 5000, () =>
-  console.log(`listening on port ${process.env.PORT || 5000}`)
-);
+oidc.on("ready", () => {
+  app.listen(process.env.PORT || 5000, () => {
+    console.log(`listening on port ${process.env.PORT || 5000}`);
+  });
+});
+
+oidc.on("error", err => {
+  console.log("Unable to configure ExpressOIDC", err);
+});
