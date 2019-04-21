@@ -2,8 +2,10 @@ const express = require("express");
 const session = require("express-session");
 const nunjucks = require("nunjucks");
 const cors = require("cors");
-const okta = require("@okta/okta-sdk-nodejs");
-const ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
+// const okta = require("@okta/okta-sdk-nodejs");
+// const ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
+const passport = require("passport");
+const OidcStrategy = require("passport-openidconnect").Strategy;
 
 const welcomeRouter = require("./routes/welcome");
 const homeRouter = require("./routes/home");
@@ -27,34 +29,73 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: "alskd;oinowioiaon'iasdij14098pugno;isdfhasdjkhlas",
-    resave: true,
-    saveUninitialized: false
+    resave: false,
+    saveUninitialized: true
   })
 );
-
-var oktaClient = new okta.Client({
-  orgUrl: "https://dev-882471.okta.com",
-  token: "00hK2PSWor0vUzqaLcqRYwhIy6EQ-KWH7Q5kZSID9c"
-});
-
-const oidc = new ExpressOIDC({
-  issuer: "https://dev-882471.okta.com/oauth2/default",
-  client_id: "0oahqwjwkAqyibi8V356",
-  client_secret: "BNH9ynOKGO5A7uya90-8K4vuToTYNiXUpPihSxkw",
-  redirect_uri: "https://cub-forum.herokuapp.com/authorization-code/callback",
-  scope: "openid profile",
-  routes: {
-    login: {
-      path: "/users/login"
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(
+  "oidc",
+  new OidcStrategy(
+    {
+      issuer: "https://dev-882471.okta.com/oauth2/default",
+      authorizationURL:
+        "https://dev-882471.okta.com/oauth2/default/v1/authorize",
+      tokenURL: "https://dev-882471.okta.com/oauth2/default/v1/token",
+      userInfoURL: "https://dev-882471.okta.com/oauth2/default/v1/userinfo",
+      clientID: "0oahqwjwkAqyibi8V356",
+      clientSecret: "BNH9ynOKGO5A7uya90-8K4vuToTYNiXUpPihSxkw",
+      callbackURL:
+        "https://cub-forum.herokuapp.com/authorization-code/callback",
+      scope: "openid profile",
+      routes: {
+        login: {
+          path: "/users/login"
+        },
+        callback: {
+          path: "/authorization-code/callback",
+          defaultRedirect: "/home"
+        }
+      }
     },
-    callback: {
-      path: "/authorization-code/callback",
-      defaultRedirect: "/home"
+    (issuer, sub, profile, accessToken, refreshToken, done) => {
+      return done(null, profile);
     }
-  }
+  )
+);
+
+passport.serializeUser((user, next) => {
+  next(null, user);
 });
 
-app.use(oidc.router);
+passport.deserializeUser((obj, next) => {
+  next(null, obj);
+});
+
+// var oktaClient = new okta.Client({
+//   orgUrl: "https://dev-882471.okta.com",
+//   token: "00hK2PSWor0vUzqaLcqRYwhIy6EQ-KWH7Q5kZSID9c"
+// });
+
+// const oidc = new ExpressOIDC({
+//   issuer: "https://dev-882471.okta.com/oauth2/default",
+//   client_id: "0oahqwjwkAqyibi8V356",
+//   client_secret: "BNH9ynOKGO5A7uya90-8K4vuToTYNiXUpPihSxkw",
+//   redirect_uri: "https://cub-forum.herokuapp.com/authorization-code/callback",
+//   scope: "openid profile",
+//   routes: {
+//     login: {
+//       path: "/users/login"
+//     },
+//     callback: {
+//       path: "/authorization-code/callback",
+//       defaultRedirect: "/home"
+//     }
+//   }
+// });
+
+// app.use(oidc.router);
 
 app.use(async (req, res, next) => {
   if (req.userinfo) {
@@ -88,12 +129,28 @@ nunjucks.configure("views", {
 
 app.set("view engine", "html");
 
-app.use("/", welcomeRouter);
-app.use("/home", oidc.ensureAuthenticated(), homeRouter);
-app.use("/users", usersRouter);
+function ensureLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
 
-app.get("/test", (req, res) => {
-  res.json({ profile: req.user ? req.user.profile : null });
+  res.redirect("/users/login");
+}
+
+app.use("/", welcomeRouter);
+app.use("/home", ensureLoggedIn, homeRouter);
+app.use("/users", usersRouter);
+app.use("/users/login", passport.authenticate("oidc"));
+app.use(
+  "/authorization-code/callback",
+  passport.authenticate("oidc", { failureRedirect: "/" }),
+  (req, res) => {
+    res.redirect("/");
+  }
+);
+
+app.use("/profile", (req, res) => {
+  res.json({ profile: req.user });
 });
 
 // creating user
