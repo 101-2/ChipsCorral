@@ -9,9 +9,7 @@ function getPosts() {
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">${obj.data[i].title}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">${
-              getUser(obj.data[i].user_id).data.displayName
-            }</h6>
+            <h6 class="card-subtitle mb-2 text-muted">name</h6>
             <p class="card-text">${obj.data[i].content}</p>
           </div>
         </div>
@@ -28,9 +26,9 @@ function getPosts() {
 function getUser(user_id) {
   axios
     .get(`https://cub-forum.herokuapp.com/user?user_id=${user_id}`)
-    .then(data => {
-      console.log(data);
-      return data;
+    .then(user => {
+      console.log(user.data);
+      return user.data;
     })
     .catch(err => {
       console.error(err);
