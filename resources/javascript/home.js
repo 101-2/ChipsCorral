@@ -19,7 +19,11 @@ function getPosts() {
       console.log(obj.data);
       for (var i = 0; i < obj.data.length; i++) {
         axios
-          .get(`https://cub-forum.herokuapp.com/user?user_id=${user_id}`)
+          .get(
+            `https://cub-forum.herokuapp.com/user?user_id=${
+              obj.data[i].user_id
+            }`
+          )
           .then(user => {
             posts += `
           <div class="card card-format">
