@@ -22,3 +22,20 @@ function getPosts() {
       console.error(err);
     });
 }
+
+function createPost() {
+  var params = {
+    title: document.getElementById("titleInput").value,
+    content: document.getElementById("contentInput").value
+  };
+
+  axios
+    .post("https://cub-forum.herokuapp.com/post", params)
+    .then(data => {
+      console.log(data);
+      location.reload();
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
