@@ -39,7 +39,17 @@
     <link rel="stylesheet" href="../../resources/css/General.css" />
   </head>
 
-  <body style="background-color: black;">
-    <div class="container-fluid" style="overflow: scroll;">Home Page</div>
+  <body>
+    <div class="container-fluid">
+      {% include "../templates/_user-header.njk" %}
+      <div class="row">
+        <div class="col">Welcome {{ name }}!</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-">thing</div>
+        <div class="col-md-">Content here</div>
+        <div class="col-sm-">something</div>
+      </div>
+    </div>
   </body>
 </html>
