@@ -158,7 +158,7 @@ app.post("/post", (req, res) => {
   const post_info = req.body;
   db.none(
     "INSERT INTO posts(title, content, user_id, thread_id) VALUES($1, $2, $3, $4);",
-    [post_info.title, post_info.content, post_info.user_id, post_info.thread_id]
+    [post_info.title, post_info.content, req.user.id, post_info.thread_id]
   )
     .then(data => {
       res.status(200);
@@ -173,6 +173,19 @@ app.post("/post", (req, res) => {
         status: "Post could not be created",
         error: err
       });
+    });
+});
+
+app.get("/posts", (req, res) => {
+  db.any("SELECT * FROM posts ORDER BY post_id DESC;")
+    .then(data => {
+      res.status(200);
+      res.send(data);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(400);
+      res.send(err);
     });
 });
 

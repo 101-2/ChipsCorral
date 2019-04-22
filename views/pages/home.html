@@ -34,12 +34,17 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
 
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     <link rel="stylesheet" href="../../resources/css/Home.css" />
     <link rel="stylesheet" href="../../resources/css/Header.css" />
     <link rel="stylesheet" href="../../resources/css/General.css" />
+
+    <script src="../../resources/javascript/home.js"></script>
   </head>
 
-  <body>
+  <body onload="getPosts()">
     <div class="container-fluid">
       {% include "../templates/_home-header.njk" %}
       <div class="col-8" id="post-container"></div>
