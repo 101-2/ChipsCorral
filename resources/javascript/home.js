@@ -1,3 +1,16 @@
+function getUser(user_id) {
+  axios
+    .get(`https://cub-forum.herokuapp.com/user?user_id=${user_id}`)
+    .then(user => {
+      console.log(user.data);
+      return user.data;
+    })
+    .catch(err => {
+      console.error(err);
+      return null;
+    });
+}
+
 function getPosts() {
   var posts = "";
   axios
@@ -19,18 +32,6 @@ function getPosts() {
       }
       console.log(posts);
       document.getElementById("post-container").innerHTML = posts;
-    })
-    .catch(err => {
-      console.error(err);
-    });
-}
-
-function getUser(user_id) {
-  axios
-    .get(`https://cub-forum.herokuapp.com/user?user_id=${user_id}`)
-    .then(user => {
-      console.log(user.data);
-      return user.data;
     })
     .catch(err => {
       console.error(err);
