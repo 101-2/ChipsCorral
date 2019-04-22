@@ -161,7 +161,6 @@ app.post("/post", (req, res) => {
 app.get("/posts", (req, res) => {
   db.any("SELECT * FROM posts ORDER BY post_id DESC;")
     .then(data => {
-      console.log(data);
       res.status(200);
       res.send(data);
     })
