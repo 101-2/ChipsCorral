@@ -1,3 +1,7 @@
 body {
   background-color: black;
 }
+
+.card-format {
+  padding: 1%;
+}
