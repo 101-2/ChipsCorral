@@ -10,7 +10,7 @@ function getPosts() {
           <div class="card-body">
             <h5 class="card-title">${obj.data[i].title}</h5>
             <h6 class="card-subtitle mb-2 text-muted">${
-              getUser(obj.data[i].user_id).displayName
+              getUser(obj.data[i].user_id).data.displayName
             }</h6>
             <p class="card-text">${obj.data[i].content}</p>
           </div>
