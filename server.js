@@ -139,8 +139,8 @@ app.get("/user", (req, res) => {
 app.post("/post", (req, res) => {
   const post_info = req.body;
   db.none(
-    "INSERT INTO posts(title, content, user_id, thread_id) VALUES($1, $2, $3, $4);",
-    [post_info.title, post_info.content, req.user.id, post_info.thread_id]
+    "INSERT INTO posts(title, content, user_id, thread_id, username) VALUES($1, $2, $3, $4);",
+    [post_info.title, post_info.content, req.user.id, 1, req.user.displayName]
   )
     .then(data => {
       res.status(200);
