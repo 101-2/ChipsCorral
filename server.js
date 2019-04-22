@@ -2,8 +2,7 @@ const express = require("express");
 const session = require("express-session");
 const nunjucks = require("nunjucks");
 const cors = require("cors");
-// const okta = require("@okta/okta-sdk-nodejs");
-// const ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
+const okta = require("@okta/okta-sdk-nodejs");
 const passport = require("passport");
 const OidcStrategy = require("passport-openidconnect").Strategy;
 
@@ -73,29 +72,10 @@ passport.deserializeUser((obj, next) => {
   next(null, obj);
 });
 
-// var oktaClient = new okta.Client({
-//   orgUrl: "https://dev-882471.okta.com",
-//   token: "00hK2PSWor0vUzqaLcqRYwhIy6EQ-KWH7Q5kZSID9c"
-// });
-
-// const oidc = new ExpressOIDC({
-//   issuer: "https://dev-882471.okta.com/oauth2/default",
-//   client_id: "0oahqwjwkAqyibi8V356",
-//   client_secret: "BNH9ynOKGO5A7uya90-8K4vuToTYNiXUpPihSxkw",
-//   redirect_uri: "https://cub-forum.herokuapp.com/authorization-code/callback",
-//   scope: "openid profile",
-//   routes: {
-//     login: {
-//       path: "/users/login"
-//     },
-//     callback: {
-//       path: "/authorization-code/callback",
-//       defaultRedirect: "/home"
-//     }
-//   }
-// });
-
-// app.use(oidc.router);
+var oktaClient = new okta.Client({
+  orgUrl: "https://dev-882471.okta.com",
+  token: "00hK2PSWor0vUzqaLcqRYwhIy6EQ-KWH7Q5kZSID9c"
+});
 
 app.use(async (req, res, next) => {
   if (req.userinfo) {
@@ -108,18 +88,7 @@ app.use(async (req, res, next) => {
 
   next();
 });
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-//   );
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
+
 app.use(cors());
 
 nunjucks.configure("views", {
@@ -151,6 +120,19 @@ app.use(
 
 app.use("/profile", (req, res) => {
   res.json({ profile: req.user });
+});
+
+app.get("/user", (req, res) => {
+  oktaClient
+    .getUser(req.query.user_id)
+    .then(user => {
+      res.status(200);
+      res.send(user);
+    })
+    .catch(err => {
+      res.status(400);
+      res.send(err);
+    });
 });
 
 // create post
