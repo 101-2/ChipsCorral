@@ -4,9 +4,11 @@ function getPosts() {
     .get("https://cub-forum.herokuapp.com/posts")
     .then(obj => {
       console.log(obj.data);
+      var user = getUser(obj.data[0].user_id);
+      console.log("USER: " + user);
       for (var i = 0; i < obj.data.length; i++) {
         posts += `
-        <div class="card">
+        <div class="card card-format">
           <div class="card-body">
             <h5 class="card-title">${obj.data[i].title}</h5>
             <h6 class="card-subtitle mb-2 text-muted">name</h6>
