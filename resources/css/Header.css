@@ -1,6 +1,7 @@
 .header-format {
   background-color: black;
   padding: 2%;
+  position: fixed;
 }
 
 .btn-format {
