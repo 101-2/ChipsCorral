@@ -119,7 +119,12 @@ app.use(
 );
 
 app.use("/profile", (req, res) => {
-  res.json({ profile: req.user });
+  res.render("pages/profile.html", {
+    user: req.user.displayName,
+    firstName: req.user.name.givenName,
+    lastName: req.user.name.familyName,
+    email: req.user._json.preferred_username
+  });
 });
 
 app.get("/user", (req, res) => {
