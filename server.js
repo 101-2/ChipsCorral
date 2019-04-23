@@ -140,7 +140,7 @@ app.get("/user", (req, res) => {
     });
 });
 
-app.get("/user/delete", (req, res) => {
+app.delete("/user/delete", (req, res) => {
   oktaClient
     .getUser(req.user.id)
     .then(user => {
@@ -152,10 +152,9 @@ app.get("/user/delete", (req, res) => {
           console.log("User has been deleted");
           req.logout();
           req.session.destroy();
-          req.user = null;
-          window.alert("Account deleted");
+          req.user = undefined;
           res.status(200);
-          res.redirect("/");
+          res.send("Successful deletion");
         })
         .catch(err => {
           console.log(err);
