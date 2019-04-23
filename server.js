@@ -152,7 +152,6 @@ app.delete("/user/delete", (req, res) => {
           console.log("User has been deleted");
           req.logout();
           req.session.destroy();
-          req.user = undefined;
           res.status(200);
           res.send("Successful deletion");
         })
