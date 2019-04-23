@@ -118,7 +118,7 @@ app.use(
   }
 );
 
-app.use("/profile", (req, res) => {
+app.use("/profile", ensureLoggedIn, (req, res) => {
   res.render("pages/profile.html", {
     user: req.user.displayName,
     firstName: req.user.name.givenName,
