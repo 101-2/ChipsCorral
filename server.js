@@ -150,8 +150,11 @@ app.delete("/user/delete", (req, res) => {
         .then(() => user.delete())
         .then(() => {
           console.log("User has been deleted");
+          req.logout();
+          req.session.destroy();
+          req.user = null;
           res.status(200);
-          res.send("Successful deletion of user");
+          res.redirect("/");
         })
         .catch(err => {
           console.log(err);
