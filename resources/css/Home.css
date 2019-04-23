@@ -8,6 +8,6 @@ body {
 }
 
 .post-container {
-  height: 400px;
+  height: 100px;
   overflow-y: scroll;
 }
