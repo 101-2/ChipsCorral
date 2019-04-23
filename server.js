@@ -153,6 +153,7 @@ app.get("/user/delete", (req, res) => {
           req.logout();
           req.session.destroy();
           req.user = null;
+          window.alert("Account deleted");
           res.status(200);
           res.redirect("/");
         })
