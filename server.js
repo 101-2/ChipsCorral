@@ -140,6 +140,30 @@ app.get("/user", (req, res) => {
     });
 });
 
+app.delete("/user/delete", (req, res) => {
+  oktaClient
+    .getUser(req.user.id)
+    .then(user => {
+      user
+        .deactivate()
+        .then(() => console.log("User has been deactivated"))
+        .then(() => user.delete())
+        .then(() => {
+          console.log("User has been deleted");
+          res.status(200);
+          res.send("Successful deletion of user");
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+});
+
 // create post
 app.post("/post", (req, res) => {
   const post_info = req.body;
