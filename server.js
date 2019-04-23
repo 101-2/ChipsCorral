@@ -140,7 +140,7 @@ app.get("/user", (req, res) => {
     });
 });
 
-app.delete("/user/delete", (req, res) => {
+app.get("/user/delete", (req, res) => {
   oktaClient
     .getUser(req.user.id)
     .then(user => {
