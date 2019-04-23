@@ -6,3 +6,8 @@ body {
   padding: 0.5%;
   margin-bottom: 1%;
 }
+
+.post-container {
+  height: 400px;
+  overflow-y: scroll;
+}
