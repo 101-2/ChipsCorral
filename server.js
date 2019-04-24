@@ -29,7 +29,8 @@ app.use(
   session({
     secret: "alskd;oinowioiaon'iasdij14098pugno;isdfhasdjkhlas",
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    thread: null
   })
 );
 app.use(passport.initialize());
@@ -170,8 +171,7 @@ app.get("/chip/:thread_url", (req, res) => {
   db.one("SELECT * FROM threads WHERE thread_url = $1", [req.params.thread_url])
     .then(data => {
       console.log(data);
-      req.thread = data;
-      console.log(req.thread);
+      req.session.thread = data;
       res.status(200);
       res.render("pages/thread_template.html", {
         thread_title: data.title,
@@ -210,8 +210,9 @@ app.post("/post", (req, res) => {
 });
 
 app.get("/posts", (req, res) => {
+  console.log("POSTS: " + req.session.thread);
   db.any("SELECT * FROM posts WHERE thread_id = $1 ORDER BY post_id DESC;", [
-    req.thread.thread_id
+    req.session.thread.thread_id
   ])
     .then(data => {
       res.status(200);
