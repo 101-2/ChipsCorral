@@ -37,7 +37,7 @@ function loadThreads() {
       for (var i = 0; i < obj.data.length; i++) {
         threads += `
         <div class="card card-format">
-          <button type="button" onclick="location.href='https://cub-forum.herokuapp.com/chip/${
+          <button class="btn-fix" type="button" onclick="location.href='https://cub-forum.herokuapp.com/chip/${
             obj.data[i].thread_url
           }'">
             <div class="card-body">
