@@ -209,7 +209,7 @@ app.post("/post", (req, res) => {
 });
 
 app.get("/posts", (req, res) => {
-  console.log("POSTS: " + req.session.thread);
+  console.log("POSTS: " + JSON.stringify(req.session.thread));
   db.any("SELECT * FROM posts WHERE thread_id = $1 ORDER BY post_id DESC;", [2])
     .then(data => {
       res.status(200);
