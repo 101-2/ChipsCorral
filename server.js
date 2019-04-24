@@ -128,7 +128,7 @@ app.use("/profile", ensureLoggedIn, (req, res) => {
 });
 
 // stop the favicon 404
-app.get("/favicon.ico", (req, res) => res.status(204));
+app.get("/favicon.icon", (req, res) => res.status(204));
 
 app.get("/user", (req, res) => {
   oktaClient
