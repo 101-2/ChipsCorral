@@ -7,7 +7,8 @@ body {
   margin-bottom: 1%;
 }
 
-.post-container {
-  height: 100px;
-  overflow-y: scroll;
+.btn-fix {
+  padding: 0;
+  border: none;
+  white-space: normal;
 }

@@ -28,3 +28,30 @@ function checkURL() {
   }
   return true;
 }
+
+function loadThreads() {
+  var threads = "";
+  axios
+    .get("/thread")
+    .then(obj => {
+      for (var i = 0; i < obj.data.length; i++) {
+        post += `
+        <div class="card card-format">
+          <a href="https://cub-forum.herokuapp.com/chip/${
+            obj.data[i].thread_url
+          }" class="btn btn-fix text-left">
+            <div class="card-body">
+              <h5 class="card-title text-dark">${obj.data[i].title}</h4>
+              <h6 class="card-subtitle mb-2 text-muted">/chip/${
+                obj.data[i].thread_url
+              }</h6>
+              <p class="card-text text-dark">${obj.data[i].about}</p>
+            </div>
+          </a>
+        </div>
+        `;
+      }
+      document.getElementById("thread-container").innerHTML = threads;
+    })
+    .catch(err => console.log(err));
+}
