@@ -4,7 +4,8 @@ const nunjucks = require("nunjucks");
 const cors = require("cors");
 const okta = require("@okta/okta-sdk-nodejs");
 const passport = require("passport");
-const OidcStrategy = require("passport-openidconnect").Strategy;
+// const OidcStrategy = require("passport-openidconnect").Strategy;
+const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
 const welcomeRouter = require("./routes/welcome");
 const homeRouter = require("./routes/home");
@@ -34,35 +35,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(
-  "oidc",
-  new OidcStrategy(
-    {
-      issuer: "https://dev-882471.okta.com/oauth2/default",
-      authorizationURL:
-        "https://dev-882471.okta.com/oauth2/default/v1/authorize",
-      tokenURL: "https://dev-882471.okta.com/oauth2/default/v1/token",
-      userInfoURL: "https://dev-882471.okta.com/oauth2/default/v1/userinfo",
-      clientID: "0oahqwjwkAqyibi8V356",
-      clientSecret: "BNH9ynOKGO5A7uya90-8K4vuToTYNiXUpPihSxkw",
-      callbackURL:
-        "https://cub-forum.herokuapp.com/authorization-code/callback",
-      scope: "openid profile",
-      routes: {
-        login: {
-          path: "/users/login"
-        },
-        callback: {
-          path: "/authorization-code/callback",
-          defaultRedirect: "/home"
-        }
-      }
-    },
-    (issuer, sub, profile, accessToken, refreshToken, done) => {
-      return done(null, profile);
-    }
-  )
-);
 
 passport.serializeUser((user, next) => {
   next(null, user);
@@ -72,22 +44,36 @@ passport.deserializeUser((obj, next) => {
   next(null, obj);
 });
 
-var oktaClient = new okta.Client({
-  orgUrl: "https://dev-882471.okta.com",
-  token: "00hK2PSWor0vUzqaLcqRYwhIy6EQ-KWH7Q5kZSID9c"
-});
-
-app.use(async (req, res, next) => {
-  if (req.userinfo) {
-    try {
-      req.user = await oktaClient.getUser(req.userinfo.sub);
-    } catch (err) {
-      console.log(err);
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID:
+        "427987254229-nrij2h066k5e92rgrr8vrb6cht0h6hl4.apps.googleusercontent.com",
+      clientSecret: "LZGtPGlT5cHAmxTdMiRAToSf",
+      callbackURL: "https://cub-forum.herokuapp.com/auth/google/callback"
+    },
+    function(token, tokenSecret, profile, done) {
+      User.findOrCreate({ googleId: profile.id }, function(err, user) {
+        return done(err, user);
+      });
     }
-  }
+  )
+);
 
-  next();
-});
+app.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["https://www.googleapis.com/auth/plus.login"]
+  })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => {
+    res.redirect("/home");
+  }
+);
 
 app.use(cors());
 
@@ -110,13 +96,13 @@ app.use("/", welcomeRouter);
 app.use("/home", ensureLoggedIn, homeRouter);
 app.use("/users", usersRouter);
 app.use("/users/login", passport.authenticate("oidc"));
-app.use(
-  "/authorization-code/callback",
-  passport.authenticate("oidc", { failureRedirect: "/" }),
-  (req, res) => {
-    res.redirect("/home");
-  }
-);
+// app.use(
+//   "/authorization-code/callback",
+//   passport.authenticate("oidc", { failureRedirect: "/" }),
+//   (req, res) => {
+//     res.redirect("/home");
+//   }
+// );
 
 app.use("/profile", ensureLoggedIn, (req, res) => {
   res.render("pages/profile.html", {
