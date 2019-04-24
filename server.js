@@ -29,8 +29,7 @@ app.use(
   session({
     secret: "alskd;oinowioiaon'iasdij14098pugno;isdfhasdjkhlas",
     resave: false,
-    saveUninitialized: true,
-    thread: null
+    saveUninitialized: true
   })
 );
 app.use(passport.initialize());
@@ -211,9 +210,7 @@ app.post("/post", (req, res) => {
 
 app.get("/posts", (req, res) => {
   console.log("POSTS: " + req.session.thread);
-  db.any("SELECT * FROM posts WHERE thread_id = $1 ORDER BY post_id DESC;", [
-    req.session.thread.thread_id
-  ])
+  db.any("SELECT * FROM posts WHERE thread_id = $1 ORDER BY post_id DESC;", [2])
     .then(data => {
       res.status(200);
       res.send(data);
