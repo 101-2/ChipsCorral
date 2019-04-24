@@ -36,10 +36,10 @@ function loadThreads() {
     .then(obj => {
       for (var i = 0; i < obj.data.length; i++) {
         threads += `
-        <button type="button" onclick="location.href='https://cub-forum.herokuapp.com/chip/${
-          obj.data[i].thread_url
-        }'">
-          <div class="card card-format">
+        <div class="card card-format">
+          <button type="button" onclick="location.href='https://cub-forum.herokuapp.com/chip/${
+            obj.data[i].thread_url
+          }'">
             <div class="card-body">
               <h5 class="card-title">${obj.data[i].title}</h4>
               <h6 class="card-subtitle mb-2 text-muted">/chip/${
@@ -47,8 +47,8 @@ function loadThreads() {
               }</h6>
               <p class="card-text">${obj.data[i].about}</p>
             </div>
-          </div>
-        </button>
+          </button>
+        </div>
         `;
       }
       document.getElementById("thread-container").innerHTML = threads;
