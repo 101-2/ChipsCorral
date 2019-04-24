@@ -70,8 +70,9 @@ app.get(
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
     console.log(req.user);
-    db.none("SELECT * FROM users WHERE user_id=$1", [req.user.id])
-      .then(() => {
+    db.any("SELECT * FROM users WHERE user_id=$1", [req.user.id])
+      .then(data => {
+        console.log(data);
         res.redirect("/new_user");
       })
       .catch(err => {
