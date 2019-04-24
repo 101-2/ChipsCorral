@@ -32,7 +32,7 @@ function checkURL() {
 function loadThreads() {
   var threads = "";
   axios
-    .get("/thread")
+    .get("/threads")
     .then(obj => {
       for (var i = 0; i < obj.data.length; i++) {
         post += `
