@@ -172,7 +172,6 @@ app.delete("/user/delete", (req, res) => {
 app.get("/chip/:thread_url", (req, res) => {
   db.one("SELECT * FROM threads WHERE thread_url = $1", [req.params.thread_url])
     .then(data => {
-      console.log(data);
       req.session.thread = data;
       res.status(200);
       res.render("pages/thread_template.html", {
