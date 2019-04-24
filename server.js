@@ -70,7 +70,13 @@ app.get(
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
     console.log(req.user);
-    res.redirect("/home");
+    db.none("SELECT * FROM users WHERE user_id=$1", [req.user.id])
+      .then(() => {
+        res.redirect("pages/new_user.html");
+      })
+      .catch(err => {
+        res.redirect("/home");
+      });
   }
 );
 
@@ -94,14 +100,6 @@ function ensureLoggedIn(req, res, next) {
 app.use("/", welcomeRouter);
 app.use("/home", ensureLoggedIn, homeRouter);
 app.use("/users", usersRouter);
-app.use("/users/login", passport.authenticate("oidc"));
-// app.use(
-//   "/authorization-code/callback",
-//   passport.authenticate("oidc", { failureRedirect: "/" }),
-//   (req, res) => {
-//     res.redirect("/home");
-//   }
-// );
 
 app.use("/profile", ensureLoggedIn, (req, res) => {
   res.render("pages/profile.html", {
@@ -116,11 +114,33 @@ app.use("/profile", ensureLoggedIn, (req, res) => {
 app.get("/favicon.icon", (req, res) => res.status(204));
 
 app.get("/user", (req, res) => {
-  oktaClient
-    .getUser(req.query.user_id)
-    .then(user => {
+  db.one("SELECT * FROM users WHERE username=$1;", [req.query.username])
+    .then(data => {
       res.status(200);
-      res.send(user);
+      res.json({
+        status: 200,
+        user: true,
+        data: data
+      });
+    })
+    .catch(err => {
+      res.status(400);
+      res.json({
+        status: 400,
+        user: false,
+        error: err
+      });
+    });
+});
+
+app.post("/user", (req, res) => {
+  db.none("INSERT INTO users(user_id, username) VALUES($1, $2);", [
+    req.user.id,
+    req.body.username
+  ])
+    .then(() => {
+      res.status(200);
+      res.redirect("/home");
     })
     .catch(err => {
       res.status(400);
