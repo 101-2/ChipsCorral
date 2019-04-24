@@ -35,7 +35,7 @@ function loadThreads() {
     .get("/threads")
     .then(obj => {
       for (var i = 0; i < obj.data.length; i++) {
-        post += `
+        threads += `
         <div class="card card-format">
           <a href="https://cub-forum.herokuapp.com/chip/${
             obj.data[i].thread_url
