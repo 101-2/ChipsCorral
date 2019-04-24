@@ -72,7 +72,7 @@ app.get(
     console.log(req.user);
     db.none("SELECT * FROM users WHERE user_id=$1", [req.user.id])
       .then(() => {
-        res.redirect("pages/new_user.html");
+        res.redirect("/new_user");
       })
       .catch(err => {
         res.redirect("/home");
@@ -100,6 +100,9 @@ function ensureLoggedIn(req, res, next) {
 app.use("/", welcomeRouter);
 app.use("/home", ensureLoggedIn, homeRouter);
 app.use("/users", usersRouter);
+app.user("/new_user", (req, res) => {
+  res.render("pages/new_user");
+});
 
 app.use("/profile", ensureLoggedIn, (req, res) => {
   res.render("pages/profile.html", {
@@ -111,7 +114,7 @@ app.use("/profile", ensureLoggedIn, (req, res) => {
 });
 
 // stop the favicon 404
-app.get("/favicon.icon", (req, res) => res.status(204));
+app.get("/favicon.ico", (req, res) => res.status(204));
 
 app.get("/user", (req, res) => {
   db.one("SELECT * FROM users WHERE username=$1;", [req.query.username])
