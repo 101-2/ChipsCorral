@@ -127,6 +127,9 @@ app.use("/profile", ensureLoggedIn, (req, res) => {
   });
 });
 
+// stop the favicon 404
+app.get("/favicon.icon", (req, res) => res.status(204));
+
 app.get("/user", (req, res) => {
   oktaClient
     .getUser(req.query.user_id)
@@ -166,12 +169,71 @@ app.delete("/user/delete", (req, res) => {
     });
 });
 
+app.get("/chip/:thread_url", ensureLoggedIn, (req, res) => {
+  db.one("SELECT * FROM threads WHERE thread_url = $1", [req.params.thread_url])
+    .then(data => {
+      req.session.thread = data;
+      res.status(200);
+      res.render("pages/thread_template.html", {
+        thread_title: data.title,
+        thread_url: data.thread_url,
+        thread_description: data.about
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+});
+
+app.post("/thread", (req, res) => {
+  const thread_info = req.body;
+  db.none(
+    "INSERT INTO threads(title, about, public, thread_url, admin_id) VALUES($1, $2, $3, $4, $5);",
+    [
+      thread_info.title,
+      thread_info.about,
+      thread_info.public,
+      thread_info.url,
+      req.user.id
+    ]
+  )
+    .then(() => {
+      res.status(200);
+      res.send("Thread creation successful");
+    })
+    .catch(err => {
+      res.status(400);
+      res.send("Thread creation failed");
+    });
+});
+
+app.get("/threads", (req, res) => {
+  db.any("SELECT * FROM threads ORDER BY thread_id DESC;")
+    .then(data => {
+      res.status(200);
+      res.send(data);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+});
+
 // create post
 app.post("/post", (req, res) => {
   const post_info = req.body;
   db.none(
     "INSERT INTO posts(title, content, user_id, thread_id, username) VALUES($1, $2, $3, $4, $5);",
-    [post_info.title, post_info.content, req.user.id, 1, req.user.displayName]
+    [
+      post_info.title,
+      post_info.content,
+      req.user.id,
+      req.session.thread.thread_id,
+      req.user.displayName
+    ]
   )
     .then(data => {
       res.status(200);
@@ -190,7 +252,9 @@ app.post("/post", (req, res) => {
 });
 
 app.get("/posts", (req, res) => {
-  db.any("SELECT * FROM posts ORDER BY post_id DESC;")
+  db.any("SELECT * FROM posts WHERE thread_id = $1 ORDER BY post_id DESC;", [
+    req.session.thread.thread_id
+  ])
     .then(data => {
       res.status(200);
       res.send(data);

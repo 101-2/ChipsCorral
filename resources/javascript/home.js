@@ -1,36 +1,17 @@
-function getPosts() {
-  var posts = "";
-  axios
-    .get("https://cub-forum.herokuapp.com/posts")
-    .then(obj => {
-      for (var i = 0; i < obj.data.length; i++) {
-        posts += `
-        <div class="card card-format">
-          <div class="card-body">
-            <h5 class="card-title">${obj.data[i].title}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">${
-              obj.data[i].username
-            } - ${obj.data[i].date_posted}</h6>
-            <p class="card-text">${obj.data[i].content}</p>
-          </div>
-        </div>
-        `;
-      }
-      document.getElementById("post-container").innerHTML = posts;
-    })
-    .catch(err => {
-      console.error(err);
-    });
-}
-
-function createPost() {
+function createThread() {
+  if (!checkURL()) {
+    window.alert("URL does not match requirements");
+    return;
+  }
   var params = {
     title: document.getElementById("titleInput").value,
-    content: document.getElementById("contentInput").value
+    about: document.getElementById("descriptionInput").value,
+    public: document.getElementById("publicInput").checked,
+    url: document.getElementById("urlInput").value
   };
 
   axios
-    .post("https://cub-forum.herokuapp.com/post", params)
+    .post("/thread", params)
     .then(data => {
       console.log(data);
       location.reload();
@@ -38,4 +19,39 @@ function createPost() {
     .catch(err => {
       console.log(err);
     });
+}
+
+function checkURL() {
+  var urlRegex = RegExp("([A-Za-z0-9-_]+)");
+  if (!urlRegex.test(document.getElementById("urlInput").value)) {
+    return false;
+  }
+  return true;
+}
+
+function loadThreads() {
+  var threads = "";
+  axios
+    .get("/threads")
+    .then(obj => {
+      for (var i = 0; i < obj.data.length; i++) {
+        threads += `
+        <div class="card card-format">
+          <button class="btn-fix" type="button" onclick="location.href='https://cub-forum.herokuapp.com/chip/${
+            obj.data[i].thread_url
+          }'">
+            <div class="card-body">
+              <h5 class="card-title">${obj.data[i].title}</h4>
+              <h6 class="card-subtitle mb-2 text-muted">/chip/${
+                obj.data[i].thread_url
+              }</h6>
+              <p class="card-text">${obj.data[i].about}</p>
+            </div>
+          </button>
+        </div>
+        `;
+      }
+      document.getElementById("thread-container").innerHTML = threads;
+    })
+    .catch(err => console.log(err));
 }

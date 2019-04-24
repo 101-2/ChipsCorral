@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>Chip's Corral</title>
+    <title>Chip's Corral - {{thread_title}}</title>
 
     <link
       rel="stylesheet"
@@ -41,32 +41,16 @@
     <link rel="stylesheet" href="../../resources/css/Header.css" />
     <link rel="stylesheet" href="../../resources/css/General.css" />
 
-    <script src="../../resources/javascript/home.js"></script>
+    <script src="../../resources/javascript/threads.js"></script>
   </head>
 
-  <body onload="loadThreads()">
+  <body onload="getPosts()">
     <div class="container-fluid">
       <nav class="row header-format navbar navbar-fixed-top">
         <div class="col-4">
-          <a
-            class="btn btn-style"
-            href="https://cub-forum.herokuapp.com/home"
-            role="button"
-            >Home</a
-          >
+          <a class="btn btn-style" href="https://cub-forum.herokuapp.com/home" role="button">Home</a>
         </div>
-        <div class="col-4">
-          <center>
-            <button
-              type="button"
-              class="btn btn-style"
-              data-toggle="modal"
-              data-target="#newThreadModal"
-            >
-              Create Thread
-            </button>
-          </center>
-        </div>
+        <div class="col-4"></div>
         <div class="col-4">
           <center>
             <a
@@ -77,7 +61,7 @@
               Profile
             </a>
             <a
-              class="btn-style btn"
+              class="btn btn-style"
               href="https://cub-forum.herokuapp.com/users/logout"
               role="button"
             >
@@ -87,20 +71,44 @@
         </div>
       </nav>
 
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-6" id="post-container"></div>
+        <div class="col-3" id="thread-info">
+          <div class="card">
+            <div class="card-body">
+              <center>
+                <h3 class="card-title">{{thread_title}}</h3>
+                <h5 class="card-subtitle mb-2 text-muted">/chip/{{thread_url}}</h3>
+                  <p class="card-text">{{thread_description}}</p>
+                  <button
+                    type="button"
+                    class="btn-style btn"
+                    data-toggle="modal"
+                    data-target="#postModal"
+                  >
+                    Create Post
+                  </button>
+
+              </center>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
       <div
         class="modal fade"
-        id="newThreadModal"
+        id="postModal"
         tabindex="-1"
         role="dialog"
-        aria-labelledby="newThreadModalLabel"
+        aria-labelledby="postModalLabel"
         aria-hidden="true"
       >
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="newThreadModalLabel">
-                Create New Thread
-              </h5>
+              <h5 class="modal-title" id="postModalLabel">Create Post</h5>
               <button
                 type="button"
                 class="close"
@@ -118,62 +126,17 @@
                     type="text"
                     class="form-control"
                     id="titleInput"
-                    placeholder="Title"
+                    aria-describedby="titleInfo"
+                    placeholder="Post Title"
                   />
                 </div>
                 <div class="form-group">
-                  <label for="urlInput">Thread URL</label>
-                  <div class="form-inline">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">/chip/</div>
-                    </div>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="urlInput"
-                      aria-describedby="urlInfo"
-                      placeholder="somenamewithoutspaces"
-                    />
-                  </div>
-                  <small id="urlInfo" class="form-text text-muted"
-                    >Thread URL can only have letters, numbers, dashes(-), and
-                    underscores(_)</small
-                  >
-                </div>
-                <div class="form-group">
-                  <label for="descriptionInput">Description</label>
+                  <label for="contentInput">Content</label>
                   <textarea
                     class="form-control"
-                    id="descriptionInput"
-                    rows="3"
+                    id="contentInput"
+                    rows="5"
                   ></textarea>
-                </div>
-                <div class="form-group">
-                  <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="publicPrivate"
-                      id="publicInput"
-                      value="public"
-                      checked
-                    />
-                    <label class="form-check-label" for="publicInput"
-                      >Public</label
-                    >
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="publicPrivate"
-                      id="privateInput"
-                      value="private"
-                    />
-                    <label class="form-check-label" for="privateInput"
-                      >Private</label
-                    >
-                  </div>
                 </div>
               </form>
             </div>
@@ -188,16 +151,15 @@
               <button
                 type="button"
                 class="btn btn-style"
-                onclick="createThread()"
+                onclick="createPost()"
               >
-                Create Thread
+                Post
               </button>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="col-6 mx-auto" id="thread-container"></div>
+      
     </div>
   </body>
 </html>
