@@ -73,9 +73,14 @@ app.get(
     db.any("SELECT * FROM users WHERE user_id=$1", [req.user.id])
       .then(data => {
         console.log(data);
-        res.redirect("/new_user");
+        if (data.length == 0) {
+          res.redirect("/new_user");
+        } else {
+          res.redirect("/home");
+        }
       })
       .catch(err => {
+        console.log(err);
         res.redirect("/home");
       });
   }
