@@ -209,6 +209,19 @@ app.post("/thread", (req, res) => {
     });
 });
 
+app.get("/threads", (req, res) => {
+  db.any("SELECT * FROM threads ORDER BY thread_id DESC;")
+    .then(data => {
+      res.status(200);
+      res.send(data);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+});
+
 // create post
 app.post("/post", (req, res) => {
   const post_info = req.body;
