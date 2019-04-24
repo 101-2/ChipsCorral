@@ -14,6 +14,7 @@ function createThread() {
     .post("/thread", params)
     .then(data => {
       console.log(data);
+      location.reload();
     })
     .catch(err => {
       console.log(err);
