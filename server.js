@@ -170,7 +170,7 @@ app.get("/chip/:thread_url", (req, res) => {
   db.one("SELECT * FROM threads WHERE thread_url = $1", [req.params.thread_url])
     .then(data => {
       console.log(data);
-      req.thread.id = data.thread_id;
+      req.thread = data;
       res.status(200);
       res.render("pages/thread_template.html", {
         thread_title: data.title,
@@ -210,7 +210,7 @@ app.post("/post", (req, res) => {
 
 app.get("/posts", (req, res) => {
   db.any("SELECT * FROM posts WHERE thread_id = $1 ORDER BY post_id DESC;", [
-    req.thread.id
+    req.thread.thread_id
   ])
     .then(data => {
       res.status(200);
