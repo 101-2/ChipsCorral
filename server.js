@@ -169,7 +169,7 @@ app.delete("/user/delete", (req, res) => {
     });
 });
 
-app.get("/chip/:thread_url", (req, res) => {
+app.get("/chip/:thread_url", ensureLoggedIn, (req, res) => {
   db.one("SELECT * FROM threads WHERE thread_url = $1", [req.params.thread_url])
     .then(data => {
       req.session.thread = data;
