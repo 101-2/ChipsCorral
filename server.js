@@ -36,14 +36,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.serializeUser((user, next) => {
-  next(null, user);
-});
-
-passport.deserializeUser((obj, next) => {
-  next(null, obj);
-});
-
 passport.use(
   new GoogleStrategy(
     {
@@ -52,24 +44,30 @@ passport.use(
       clientSecret: "LZGtPGlT5cHAmxTdMiRAToSf",
       callbackURL: "https://cub-forum.herokuapp.com/auth/google/callback"
     },
-    function(token, tokenSecret, profile, done) {
-      User.findOrCreate({ googleId: profile.id }, function(err, user) {
-        return done(err, user);
-      });
+    (token, tokenSecret, profile, done) => {
+      done(null, profile);
     }
   )
 );
 
+passport.serializeUser((user, next) => {
+  next(null, user);
+});
+
+passport.deserializeUser((obj, next) => {
+  next(null, obj);
+});
+
 app.get(
   "/auth/google",
   passport.authenticate("google", {
-    scope: ["https://www.googleapis.com/auth/plus.login"]
+    scope: ["profile"]
   })
 );
 
 app.get(
   "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
     res.redirect("/home");
   }
@@ -85,7 +83,7 @@ nunjucks.configure("views", {
 app.set("view engine", "html");
 
 function ensureLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
+  if (req.user) {
     return next();
   }
 
