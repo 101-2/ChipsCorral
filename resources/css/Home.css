@@ -8,6 +8,7 @@ body {
 }
 
 .btn-fix {
+  background: white;
   padding: 0;
   border: none;
   white-space: normal;
