@@ -21,7 +21,7 @@ function createThread() {
 }
 
 function checkURL() {
-  var urlRegex = RegExp("[A-Za-z0-9-_]+");
+  var urlRegex = RegExp("([A-Za-z0-9-_]+)");
   if (!urlRegex.test(document.getElementById("urlInput").value)) {
     return false;
   }
