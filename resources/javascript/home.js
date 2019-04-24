@@ -6,7 +6,7 @@ function createThread() {
   var params = {
     title: document.getElementById("titleInput").value,
     about: document.getElementById("descriptionInput").value,
-    public: document.getElementById("publicId").checked,
+    public: document.getElementById("publicInput").checked,
     url: document.getElementById("urlInput").value
   };
 
