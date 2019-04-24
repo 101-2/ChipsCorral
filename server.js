@@ -171,6 +171,7 @@ app.get("/chip/:thread_url", (req, res) => {
     .then(data => {
       console.log(data);
       req.thread = data;
+      console.log(req.thread);
       res.status(200);
       res.render("pages/thread_template.html", {
         thread_title: data.title,
