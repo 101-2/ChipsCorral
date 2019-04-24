@@ -120,7 +120,10 @@ app.use("/profile", ensureLoggedIn, (req, res) => {
 });
 
 // stop the favicon 404
-app.get("/favicon.ico", (req, res) => res.status(204));
+app.get("/favicon.ico", (req, res) => {
+  res.status(204);
+  res.send("STOP THIS MADNESS");
+});
 
 app.get("/user", (req, res) => {
   db.one("SELECT * FROM users WHERE username=$1;", [req.query.username])
