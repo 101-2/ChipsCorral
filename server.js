@@ -231,7 +231,7 @@ app.post("/post", (req, res) => {
       post_info.title,
       post_info.content,
       req.user.id,
-      req.thread.thread_id,
+      req.session.thread.thread_id,
       req.user.displayName
     ]
   )
