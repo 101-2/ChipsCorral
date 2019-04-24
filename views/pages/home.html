@@ -44,72 +44,44 @@
     <script src="../../resources/javascript/home.js"></script>
   </head>
 
-  <body onload="getPosts()">
+  <body>
     <div class="container-fluid">
-      {% include "../templates/_home-header.njk" %}
-
-      <div
-        class="modal fade"
-        id="postModal"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="postModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="postModalLabel">Create Post</h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="form-group">
-                  <label for="titleInput">Title</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="titleInput"
-                    aria-describedby="titleInfo"
-                    placeholder="Post Title"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="contentInput">Content</label>
-                  <textarea
-                    class="form-control"
-                    id="contentInput"
-                    rows="5"
-                  ></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                class="btn btn-style"
-                onclick="createPost()"
-              >
-                Post
-              </button>
-            </div>
-          </div>
+      <nav class="row header-format navbar navbar-fixed-top">
+        <div class="col-4">
+          <a
+            class="btn-style btn"
+            href="https://cub-forum.herokuapp.com/home"
+            role="button"
+            >Home</a
+          >
         </div>
-      </div>
+        <div class="col-4">
+          <a
+            class="btn-style btn"
+            href="https://cub-forum.herokuapp.com/chip/skobuffs"
+            role="button"
+            >Thread</a
+          >
+        </div>
+        <div class="col-4">
+          <center>
+            <a
+              class="btn-style btn"
+              href="https://cub-forum.herokuapp.com/profile"
+              role="button"
+            >
+              Profile
+            </a>
+            <a
+              class="btn-style btn"
+              href="https://cub-forum.herokuapp.com/users/logout"
+              role="button"
+            >
+              Logout
+            </a>
+          </center>
+        </div>
+      </nav>
 
       <div class="col-6 mx-auto" id="post-container"></div>
     </div>
