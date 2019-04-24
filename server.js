@@ -190,7 +190,13 @@ app.post("/post", (req, res) => {
   const post_info = req.body;
   db.none(
     "INSERT INTO posts(title, content, user_id, thread_id, username) VALUES($1, $2, $3, $4, $5);",
-    [post_info.title, post_info.content, req.user.id, 1, req.user.displayName]
+    [
+      post_info.title,
+      post_info.content,
+      req.user.id,
+      req.thread.thread_id,
+      req.user.displayName
+    ]
   )
     .then(data => {
       res.status(200);
@@ -209,7 +215,6 @@ app.post("/post", (req, res) => {
 });
 
 app.get("/posts", (req, res) => {
-  console.log("POSTS: " + req.session.thread.thread_id);
   db.any("SELECT * FROM posts WHERE thread_id = $1 ORDER BY post_id DESC;", [
     req.session.thread.thread_id
   ])
