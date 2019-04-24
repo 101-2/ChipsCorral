@@ -41,11 +41,11 @@ function loadThreads() {
             obj.data[i].thread_url
           }" class="btn btn-fix text-left">
             <div class="card-body">
-              <h5 class="card-title text-dark">${obj.data[i].title}</h4>
+              <h5 class="card-title">${obj.data[i].title}</h4>
               <h6 class="card-subtitle mb-2 text-muted">/chip/${
                 obj.data[i].thread_url
               }</h6>
-              <p class="card-text text-dark">${obj.data[i].about}</p>
+              <p class="card-text">${obj.data[i].about}</p>
             </div>
           </a>
         </div>
