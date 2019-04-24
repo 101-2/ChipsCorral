@@ -100,7 +100,7 @@ function ensureLoggedIn(req, res, next) {
 app.use("/", welcomeRouter);
 app.use("/home", ensureLoggedIn, homeRouter);
 app.use("/users", usersRouter);
-app.user("/new_user", (req, res) => {
+app.use("/new_user", (req, res) => {
   res.render("pages/new_user");
 });
 
