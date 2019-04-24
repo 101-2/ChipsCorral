@@ -185,6 +185,28 @@ app.get("/chip/:thread_url", (req, res) => {
     });
 });
 
+app.post("/thread", (req, res) => {
+  const thread_info = req.body;
+  db.none(
+    "INSERT INTO threads(title, about, public, thread_url, admin_ids) VALUES($1, $2, $3, $4, $5);",
+    [
+      thread_info.title,
+      thread_info.about,
+      thread_info.public,
+      thread_info.url,
+      ARRAY[req.user.id]
+    ]
+  )
+    .then(() => {
+      res.status(200);
+      res.send("Thread creation successful");
+    })
+    .catch(err => {
+      res.status(400);
+      res.send("Thread creation failed");
+    });
+});
+
 // create post
 app.post("/post", (req, res) => {
   const post_info = req.body;
