@@ -39,9 +39,8 @@ app.use(passport.session());
 passport.use(
   new GoogleStrategy(
     {
-      clientID:
-        "427987254229-nrij2h066k5e92rgrr8vrb6cht0h6hl4.apps.googleusercontent.com",
-      clientSecret: "LZGtPGlT5cHAmxTdMiRAToSf",
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "https://cub-forum.herokuapp.com/auth/google/callback"
     },
     (token, tokenSecret, profile, done) => {
