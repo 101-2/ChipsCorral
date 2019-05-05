@@ -1,12 +1,14 @@
 {
   "name": "chipscorral",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Community-Forum Site for CU Boulder Students",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
-  "author": "",
+  "author": "101-2",
+  "repository": "https://github.com/101-2/ChipsCorral",
   "license": "ISC",
   "dependencies": {
     "@okta/oidc-middleware": "^1.0.2",
