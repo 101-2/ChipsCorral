@@ -42,6 +42,8 @@ Chips Corral is currently live at https://cub-forum.herokuapp.com/
 │   └── templates
 │       ├── _home-header.njk
 │       └── _main-header.njk
+├── .gitignore
+├── README.md
 ├── package-lock.json
 ├── package.json
 └── server.js
