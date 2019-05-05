@@ -118,6 +118,16 @@ app.use(
   }
 );
 
+// stop the favicon 404
+app.get("/favicon.icon", (req, res) => res.status(204));
+
+/**
+ * @api {get} /profile
+ * @apiName GetProfile
+ * @apiGroup User
+ *
+ * @apiDescription Renders profile page with user info which has been stored in req.user. User must be logged in to access this.
+ */
 app.use("/profile", ensureLoggedIn, (req, res) => {
   res.render("pages/profile.html", {
     user: req.user.displayName,
@@ -127,9 +137,13 @@ app.use("/profile", ensureLoggedIn, (req, res) => {
   });
 });
 
-// stop the favicon 404
-app.get("/favicon.icon", (req, res) => res.status(204));
-
+/**
+ * @api {get} /user
+ * @apiName GetUser
+ * @apiGroup User
+ *
+ * @apiParam {String} user_id Users unique ID sent as a request query.
+ */
 app.get("/user", (req, res) => {
   oktaClient
     .getUser(req.query.user_id)
@@ -143,6 +157,13 @@ app.get("/user", (req, res) => {
     });
 });
 
+/**
+ * @api {delete} /user/delete
+ * @apiName DeleteUser
+ * @apiGroup User
+ *
+ * @apiDescription Used to delete user, will only delete user of id stored in req.user (current active user).
+ */
 app.delete("/user/delete", (req, res) => {
   oktaClient
     .getUser(req.user.id)
@@ -169,6 +190,15 @@ app.delete("/user/delete", (req, res) => {
     });
 });
 
+/**
+ * @api {get} /chip/:thread_url
+ * @apiName GetThread
+ * @apiGroup Thread
+ *
+ * @apiParam {String} thread_url Unique Thread URL used to find thread info in database.
+ *
+ * @apiDescription Renders thread based on the thread URL using a thread template.
+ */
 app.get("/chip/:thread_url", ensureLoggedIn, (req, res) => {
   db.one("SELECT * FROM threads WHERE thread_url = $1", [req.params.thread_url])
     .then(data => {
@@ -187,6 +217,18 @@ app.get("/chip/:thread_url", ensureLoggedIn, (req, res) => {
     });
 });
 
+/**
+ * @api {post} /thread
+ * @apiName PostThread
+ * @apiGroup Thread
+ *
+ * @apiParam {String} title Thread title sent in the request body
+ * @apiParam {String} about Thread description sent in the request body
+ * @apiParam {Boolean} public Boolean value sent in the request body to determine if thread is public or private
+ * @apiParam {String} url A unique thread URL sent in the request body
+ *
+ * @apiDescription Pulls information from the request body and uses it to create a new thread.
+ */
 app.post("/thread", (req, res) => {
   const thread_info = req.body;
   db.none(
@@ -209,6 +251,13 @@ app.post("/thread", (req, res) => {
     });
 });
 
+/**
+ * @api {get} /threads
+ * @apiName GetThreads
+ * @apiGroup Thread
+ *
+ * @apiDescription Retrieves all threads in database.
+ */
 app.get("/threads", (req, res) => {
   db.any("SELECT * FROM threads ORDER BY thread_id DESC;")
     .then(data => {
@@ -222,7 +271,16 @@ app.get("/threads", (req, res) => {
     });
 });
 
-// create post
+/**
+ * @api {post} /post
+ * @apiName PostPost
+ * @apiGroup Post
+ *
+ * @apiParam {String} title The title of the post sent in the request body
+ * @apiParam {String} content The content of the post sent in the request body
+ *
+ * @apiDescription Pulls information from request and creates a new post
+ */
 app.post("/post", (req, res) => {
   const post_info = req.body;
   db.none(
@@ -251,6 +309,13 @@ app.post("/post", (req, res) => {
     });
 });
 
+/**
+ * @api {get} /posts
+ * @apiName GetPosts
+ * @apiGroup Post
+ *
+ * @apiDescription Gets all posts related to current thread
+ */
 app.get("/posts", (req, res) => {
   db.any("SELECT * FROM posts WHERE thread_id = $1 ORDER BY post_id DESC;", [
     req.session.thread.thread_id
@@ -266,7 +331,14 @@ app.get("/posts", (req, res) => {
     });
 });
 
-// get post
+/**
+ * @api {get} /post
+ * @apiName GetPost
+ * @apiGroup Post
+ *
+ * @apiParam {Number} id Unique post id sent as a request query
+ * @apiDescription Gets the information of a single post
+ */
 app.get("/post", (req, res) => {
   db.one("SELECT * FROM posts WHERE post_id=$1;", [req.query.id])
     .then(data => {
@@ -283,7 +355,14 @@ app.get("/post", (req, res) => {
     });
 });
 
-// delete post
+/**
+ * @api {delete} /post
+ * @apiName DeletePost
+ * @apiGroup Post
+ *
+ * @apiParam {Number} id Unique post id sent as a request query
+ * @apiDescription Deletes post with id
+ */
 app.delete("/post", (req, res) => {
   db.one("SELECT * FROM posts WHERE post_id=$1;", [req.query.id])
     .then(data => {
@@ -308,8 +387,6 @@ app.delete("/post", (req, res) => {
       res.send({ err });
     });
 });
-
-// start server
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`listening on port ${process.env.PORT || 5000}`);
